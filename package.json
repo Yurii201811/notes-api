@@ -1,5 +1,5 @@
 {
-  "name": "notes-api",
+  "name": "@marcus.beauregard/notes-api",
   "version": "1.0.0",
   "description": "A small REST API for notes",
   "main": "server.js",
