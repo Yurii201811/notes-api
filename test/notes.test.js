@@ -15,7 +15,7 @@ test.before(async () => {
   base = `http://127.0.0.1:${server.address().port}`;
 });
 
-test.after(() => server.close());
+test.after(() => new Promise((resolve) => server.close(resolve)));
 
 test('DELETE removes an existing note and then reports it missing', async () => {
   const created = await fetch(`${base}/notes`, {
@@ -39,7 +39,8 @@ test('DELETE of a missing note returns 404 instead of a second 204', async () =>
   assert.deepStrictEqual(await missing.json(), { error: 'not found' });
 });
 
-test('DELETE of a non-numeric id returns 404', async () => {
+test('DELETE of a non-numeric id returns 404, not a driver error', async () => {
   const bad = await fetch(`${base}/notes/nope`, { method: 'DELETE' });
   assert.strictEqual(bad.status, 404);
+  assert.deepStrictEqual(await bad.json(), { error: 'not found' });
 });
