@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (C) 2026 Marcus Beauregard
+
 const express = require('express');
 const db = require('./db');
 const app = express();
