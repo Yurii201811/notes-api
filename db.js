@@ -1,5 +1,5 @@
 const Database = require('better-sqlite3');
-const db = new Database('notes.db');
+const db = new Database(process.env.NOTES_DB || 'notes.db');
 db.exec('CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, created_at TEXT)');
 
 module.exports = {

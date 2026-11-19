@@ -44,9 +44,14 @@ app.patch('/notes/:id', (req, res) => {
 });
 
 app.delete('/notes/:id', (req, res) => {
-  db.remove(req.params.id);
+  const { changes } = db.remove(req.params.id);
+  if (changes === 0) return res.status(404).json({ error: 'not found' });
   res.status(204).end();
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log('notes-api listening on ' + port));
+if (require.main === module) {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => console.log('notes-api listening on ' + port));
+}
+
+module.exports = app;
