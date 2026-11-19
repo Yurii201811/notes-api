@@ -10,5 +10,13 @@ module.exports = {
       .run(title, body, new Date().toISOString());
     return db.prepare('SELECT * FROM notes WHERE id = ?').get(r.lastInsertRowid);
   },
+  update: (id, fields) => {
+    const keys = Object.keys(fields);
+    if (keys.length === 0) return db.prepare('SELECT * FROM notes WHERE id = ?').get(id);
+    const assignments = keys.map((key) => `${key} = ?`).join(', ');
+    const values = keys.map((key) => fields[key]);
+    db.prepare(`UPDATE notes SET ${assignments} WHERE id = ?`).run(...values, id);
+    return db.prepare('SELECT * FROM notes WHERE id = ?').get(id);
+  },
   remove: (id) => db.prepare('DELETE FROM notes WHERE id = ?').run(id),
 };

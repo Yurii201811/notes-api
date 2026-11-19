@@ -22,6 +22,27 @@ app.get('/notes/:id', (req, res) => {
   res.json(note);
 });
 
+app.patch('/notes/:id', (req, res) => {
+  const note = db.get(req.params.id);
+  if (!note) return res.status(404).json({ error: 'not found' });
+
+  const fields = {};
+  for (const key of ['title', 'body']) {
+    if (req.body[key] !== undefined) fields[key] = req.body[key];
+  }
+  if (Object.keys(fields).length === 0) {
+    return res.status(400).json({ error: 'title or body is required' });
+  }
+  if (fields.title !== undefined && (typeof fields.title !== 'string' || !fields.title.trim())) {
+    return res.status(400).json({ error: 'title must be a non-empty string' });
+  }
+  if (fields.body !== undefined && typeof fields.body !== 'string') {
+    return res.status(400).json({ error: 'body must be a string' });
+  }
+
+  res.json(db.update(req.params.id, fields));
+});
+
 app.delete('/notes/:id', (req, res) => {
   db.remove(req.params.id);
   res.status(204).end();
